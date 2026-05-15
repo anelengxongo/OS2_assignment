@@ -19,6 +19,8 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.PriorityBlockingQueue;
 import java.util.concurrent.TimeUnit;
+import java.io.File;
+import java.io.FileWriter;
 
 public class Barman extends Thread {
 
@@ -337,6 +339,35 @@ public class Barman extends Thread {
     
     private void recordCompletedOrder(DrinkOrder order) throws IOException {
     	// THIS IS THE ONLY FUNCTION YOU MAY CHANGE
+        String runId = System.getProperty("barScheduling.runId", schedulerName);
+        File dir = new File("results");
+        if (!dir.exists()){
+            dir.mkdirs();
+        }
+
+        File csvFile = new File(dir, runId + ".csv");
+        boolean writeHeader = !csvFile.exists() || csvFile.length() ==0;
+
+        try (FileWriter fw = new FileWriter(csvFile, /* append = */ true)){
+            if (writeHeader){
+                fw.write("scheduler, patronID, drinkName, execTime,"+"arrivalTime, serviceStartTime, completionTime," + "waitingTime, responseTime, turnaroundTime, queueLevel\n");
+            }
+
+            fw.write(
+                schedulerName              + "," +
+                order.getOrderer()         + "," +
+                order.getDrinkName()       + "," +
+                order.getExecutionTime()   + "," +
+                order.getArrivalTime()     + "," +
+                order.getServiceStartTime()+ "," +
+                order.getCompletionTime()  + "," +
+                order.getWaitingTime()     + "," +   
+                order.getResponseTime()    + "," +   
+                order.getTurnaroundTime()  + "," +   
+                order.getQueueLevel()      + "\n"
+            );
+           
+        }
     }
 
 }
