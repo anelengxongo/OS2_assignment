@@ -10,7 +10,7 @@
 set -euo pipefail
 
 # ── Configuration ────────────────────────────────────────────────────────────
-PATRONS=(10 20 30 50)           # range of patron counts to test
+PATRONS=(20 40 60 80 100)           # range of patron counts to test
 SEEDS=(42 123 456 789 1024)     # five different seeds → five workload replicas
 SCHEDULERS=(0 1 2 3)            # 0=FCFS 1=SJF 2=Priority 3=MLFQ
 SWITCH_TIME=0                   # context-switch overhead in ms (keep 0 for fair comparison)
@@ -48,4 +48,3 @@ done
 
 echo ""
 echo "=== All ${total} runs complete ==="
-echo "Results written to results/  — run analyse_results.py to generate graphs."
